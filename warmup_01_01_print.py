@@ -70,8 +70,5 @@ print(int(3.14))
 print(float(1))
 print(str(12345)+str(67890))
 
-<<<<<<< HEAD
 print(bool(12345))
 #github test
-=======
->>>>>>> parent of 35d336b (github desktop test)
