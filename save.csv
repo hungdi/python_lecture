@@ -1,0 +1,5 @@
+user_name,job,health,food,antidote,infected,infection_count,alive
+강도1,강도,0,0,0,True,2,False
+경찰1,경찰,0,0,0,True,4,False
+시민1,시민,40,0,0,True,3,True
+의사1,의사,25,0,0,False,0,True

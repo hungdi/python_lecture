@@ -1,21 +1,18 @@
 import unittest
 from simulator import SurvivalSimulator
 from user import User
-from job import Civilian, Police, Thief
+from job import Civilian, Police, Doctor, Thief
 
 class TestSimulation(unittest.TestCase):
-    """시뮬레이션 로직 테스트"""
+    """시뮬레이션 테스트"""
 
     def setUp(self):
-        """
-        테스트를 위한 기본 객체 초기화
-        - 시뮬레이터 인스턴스
-        - 각 직업군별 유저 (시민, 경찰, 강도)
-        """
-        self.simulator = SurvivalSimulator()
+        """테스트 객체 초기화"""
+        self.simulator = SurvivalSimulator(test_mode=True)
         self.civilian = User("시민", Civilian(), health=100)
         self.police = User("경찰", Police(), health=100)
         self.thief = User("강도", Thief(), health=60)
+        self.doctor = User("의사", Doctor(), health=80)
 
     def test_energy_consumption(self):
         """
@@ -55,20 +52,46 @@ class TestSimulation(unittest.TestCase):
         """
         감염 진행 테스트
         Input:
-        - 감염된 시민
-        - 감염 카운트 2
+        - 감염된 시민 (최대 감염 일수 4일)
+        - 감염 카운트 3일
         Expected:
-        - 감염 카운트 3으로 증가
-        - 사망 처리 (체력 0, 생존 False)
+        - 감염 카운트 4일로 증가
+        - 4일 연속 감염으로 사망
         """
         self.civilian.status.infected = True
-        self.civilian.status.count = 2
+        self.civilian.status.count = 3
+        initial_health = self.civilian.health
         
         self.simulator.update_infection_status(self.civilian)
         
-        self.assertEqual(self.civilian.status.count, 3)
-        self.assertEqual(self.civilian.health, 0)
-        self.assertFalse(self.civilian.alive)
+        self.assertEqual(self.civilian.status.count, 4)
+        self.assertEqual(self.civilian.health, 0)  # 사망으로 인한 체력 0
+        self.assertFalse(self.civilian.alive)  # 사망 상태
+        
+    def test_doctor_infection_resistance(self):
+        """
+        의사의 감염 저항 테스트
+        Input:
+        - 감염된 의사 (최대 감염 일수 6일)
+        - 감염 카운트 5일
+        Expected:
+        - 감염 카운트 6일로 증가
+        - 아직 생존 (6일째에 사망)
+        """
+        self.doctor.status.infected = True
+        self.doctor.status.count = 5
+        initial_health = self.doctor.health
+        
+        self.simulator.update_infection_status(self.doctor)
+        
+        self.assertEqual(self.doctor.status.count, 6)
+        self.assertEqual(self.doctor.health, initial_health)  # 체력 유지
+        self.assertTrue(self.doctor.alive)  # 아직 생존
+        
+        # 하루 더 진행하면 사망
+        self.simulator.update_infection_status(self.doctor)
+        self.assertEqual(self.doctor.health, 0)  # 사망으로 인한 체력 0
+        self.assertFalse(self.doctor.alive)  # 사망 상태
 
     def test_infection_cure(self):
         """
