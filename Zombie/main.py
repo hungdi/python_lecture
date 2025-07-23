@@ -1,7 +1,6 @@
 import os
 import random
 from job import Civilian, Police, Thief
-from resource import Resource
 from user import User, Status
 from simulator import SurvivalSimulator
 from interaction import InteractionManager
@@ -11,12 +10,12 @@ from simulation_controller import SimulationController
 
 def get_initial_users():
     return [
-        User("강도1", Thief(), Resource(food=0, antidote=0, health=60), Status()),
-        User("경찰1", Police(), Resource(food=2, antidote=1, health=100), Status()),
-        User("시민1", Civilian(), Resource(food=3, antidote=0, health=100), Status()),
+        User("강도1", Thief(), health=60),
+        User("경찰1", Police(), health=100),
+        User("시민1", Civilian(), health=100),
     ]
 
-def simulate_from_file(filename="save.json", days=3):
+def simulate_from_file(filename="save.csv", days=3):
     users = load_users(filename) if os.path.exists(filename) else get_initial_users()
 
     sim = SurvivalSimulator()

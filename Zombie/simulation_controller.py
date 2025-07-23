@@ -21,4 +21,4 @@ class SimulationController:
     def print_summary(self, users):
         print("\n[상태 요약]")
         for u in users:
-            print(f"{u.user_name} | {u.job.job_name} | {u.resource.summary()} | 감염: {u.status.infected} | 생존: {u.alive}")
+            print(f"{u.user_name} | {u.job.job_name} | {u.summary()} | 감염: {u.status.infected} | 생존: {u.alive}")

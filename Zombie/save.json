@@ -1,0 +1,44 @@
+[
+  {
+    "user_name": "강도1",
+    "job": "강도",
+    "health": 0,
+    "resources": {
+      "food": 0,
+      "antidote": 0
+    },
+    "status": {
+      "infected": false,
+      "count": 0
+    },
+    "alive": false
+  },
+  {
+    "user_name": "경찰1",
+    "job": "경찰",
+    "health": 40,
+    "resources": {
+      "food": 0,
+      "antidote": 0
+    },
+    "status": {
+      "infected": false,
+      "count": 0
+    },
+    "alive": true
+  },
+  {
+    "user_name": "시민1",
+    "job": "시민",
+    "health": 75,
+    "resources": {
+      "food": 0,
+      "antidote": 0
+    },
+    "status": {
+      "infected": false,
+      "count": 0
+    },
+    "alive": true
+  }
+]

@@ -1,7 +1,6 @@
 import random
 from job import Civilian, Police, Doctor, Thief
 from user import User, Status
-from resource import Resource
 
 class UserSpawner:
     def __init__(self, birth_prob=0.2):
@@ -17,4 +16,6 @@ class UserSpawner:
         job_cls = random.choice([Civilian, Police, Doctor, Thief])
         job = job_cls()
         name = f"신규_{random.randint(1000, 9999)}"
-        return User(name, job, Resource(food=1, antidote=0, health=job.basic_hp), Status())
+        user = User(name, job, health=job.basic_hp)
+        user.food.give()
+        return user

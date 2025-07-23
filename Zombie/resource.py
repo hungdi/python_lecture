@@ -1,18 +1,53 @@
-class Resource:
-    def __init__(self, food=0, antidote=0, health=100):
-        self.food = food
-        self.antidote = antidote
-        self.health = health
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from typing import Dict, Type
 
-    def has(self, item):
-        return getattr(self, item, 0) > 0
+class Resource(ABC):
+    def __init__(self, amount=0):
+        self.amount = amount
 
-    def give(self, item, amount=1):
-        setattr(self, item, getattr(self, item, 0) + amount)
+    def has(self):
+        return self.amount > 0
 
-    def take(self, item, amount=1):
-        current = getattr(self, item, 0)
-        setattr(self, item, max(0, current - amount))
+    def give(self, amount=1):
+        self.amount += amount
 
-    def summary(self):
-        return f"HP: {self.health}, 식량: {self.food}, 해독제: {self.antidote}"
+    def take(self, amount=1):
+        if self.amount >= amount:
+            self.amount -= amount
+            return True
+        return False
+
+    @abstractmethod
+    def use(self, user):
+        pass
+
+    @property
+    @abstractmethod
+    def display_name(self) -> str:
+        pass
+
+class Food(Resource):
+    @property
+    def display_name(self) -> str:
+        return "식량"
+
+    def use(self, user):
+        if self.has():
+            if self.take():  # 성공적으로 소비했을 때만 효과 적용
+                user.health = min(user.health + 15, user.job.basic_hp)
+                return True
+        return False
+
+class Antidote(Resource):
+    @property
+    def display_name(self) -> str:
+        return "해독제"
+
+    def use(self, user):
+        if self.has():
+            if self.take():  # 성공적으로 소비했을 때만 효과 적용
+                user.status.infected = False
+                user.status.count = 0
+                return True
+        return False
