@@ -71,13 +71,10 @@ class StatisticsManager:
     
     def show_popular_menu(self):
         print("\n[인기 메뉴 순위(Top 3)]")
-        # MenuItem 별로 count
 
         all_items = []
         for item_list in self.orders.customer_order.values():
             all_items.extend(item_list)
-
-        # print(all_items)
 
         counter = Counter(all_items)
         for menu, count in counter.most_common()[:3]:

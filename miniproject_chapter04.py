@@ -20,7 +20,6 @@ class TransportSpending(Spending):
     def get_tax_deduction(self):
         return int(self.amount*0.05)
 
-
 class EntertainmentSpending(Spending):
     def get_tax_deduction(self):
         return 0
@@ -44,12 +43,9 @@ class SpendingManager:
         # 해당하는 date의 list를 모두 삭제
         self.spending_list = [s for s in self.spending_list if s.date != date]
 
-
     def print_all(self):
         for s in self.spending_list:
             print(f"{s.summary()} -> 환급가능: {s.get_tax_deduction()} 원")
-
-
 
 
 
