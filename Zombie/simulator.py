@@ -30,7 +30,7 @@ class SurvivalSimulator:
     def handle_death(self, user):
         """사망 처리"""
         user.health = 0
-        user.alive = False
+        user.status.alive = False
 
     def try_get_food(self, user):
         """식량 획득 시도"""

@@ -4,6 +4,7 @@ class Status:
     def __init__(self, infected=False, count=0):
         self.infected = infected
         self.count = count
+        self.alive = True
 
 class User:
     def __init__(self, user_name, job, health=100, status=None):
@@ -13,7 +14,7 @@ class User:
         self.status = status or Status()
         self.food = Food()
         self.antidote = Antidote()
-        self.alive = True
+        
 
     def summary(self):
         resources = [

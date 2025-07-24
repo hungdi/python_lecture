@@ -11,7 +11,7 @@ def user_to_dict(user):
         "antidote": user.antidote.amount,
         "infected": str(user.status.infected),  # csv는 문자열로 저장
         "infection_count": user.status.count,
-        "alive": str(user.alive)  # csv는 문자열로 저장
+        "alive": str(user.status.alive)  # csv는 문자열로 저장
     }
 
 def user_from_dict(data):

@@ -1,0 +1,4 @@
+.vscode/
+Zombie/__init__.py
+Zombie/__pycache__/
+classes_Zombie.dot

@@ -1,10 +1,18 @@
+import random
 import unittest
 from unittest.mock import patch
-import random
+# 상위 디렉토리를 파이썬 경로에 추가
+import sys
+import os
+# 이 파일의 절대경로 기준으로 상위 디렉토리(zombie)를 sys.path에 추가
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+
 from job import Civilian, Police, Thief
 from user import User
 from interaction import InteractionManager
 from config import ROBBERY_FOOD_PROB, POLICE_ARREST_PROB
+
 
 class TestRobberySystem(unittest.TestCase):
     """강도/경찰 시스템 테스트"""
@@ -60,7 +68,7 @@ class TestRobberySystem(unittest.TestCase):
             self.interaction.perform_robbery(self.robber)
             
             # 강도 사망 및 자원 압수
-            self.assertFalse(self.robber.alive)
+            self.assertFalse(self.robber.status.alive)
             self.assertEqual(self.robber.health, 0)
             self.assertEqual(self.robber.food.amount, 0)
             self.assertEqual(self.robber.antidote.amount, 0)
@@ -82,13 +90,13 @@ class TestRobberySystem(unittest.TestCase):
             self.interaction.perform_robbery(self.robber)
             
             # 강도 생존 및 식량 강탈 성공
-            self.assertTrue(self.robber.alive)
+            self.assertTrue(self.robber.status.alive)
             self.assertEqual(self.robber.food.amount, 1)
             self.assertEqual(self.civilian.food.amount, 1)
     
     def test_dead_robber_cannot_rob(self):
         """사망한 강도는 강탈 불가 테스트"""
-        self.robber.alive = False
+        self.robber.status.alive = False
         self.interaction.perform_robbery(self.robber)
         
         # 시민의 자원 변화 없음

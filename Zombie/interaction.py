@@ -1,6 +1,8 @@
 import random
 from config import ROBBERY_FOOD_PROB, POLICE_ARREST_PROB
 
+# 여러 유저 list를 받아서 상호 영향을 주는 행동 수행을 관리하는 클래스
+# 강탈/강탈 중 검거/
 class InteractionManager:
     def __init__(self, users, test_mode=False):
         self.users = users
@@ -51,13 +53,13 @@ class InteractionManager:
     
     def _find_police(self):
         """경찰 찾기"""
-        police_list = [u for u in self.users if u.alive and self._is_police(u)]
+        police_list = [u for u in self.users if u.status.alive and self._is_police(u)]
         return police_list[0] if police_list else None
     
     def _get_civilian_victim(self, robber):
         """일반인 피해자 선택"""
         candidates = [u for u in self.users 
-                     if u.alive and u != robber and not self._is_police(u)]
+                     if u.status.alive and u != robber and not self._is_police(u)]
         return random.choice(candidates) if candidates else None
     
     def _rob_civilian(self, robber, victim):
@@ -97,7 +99,7 @@ class InteractionManager:
 
     def _can_rob(self, user):
         """강도 행동 가능 여부 확인"""
-        return user.alive and user.job.job_name == "강도"
+        return user.status.alive and user.job.job_name == "강도"
     
     def _is_police(self, user):
         """경찰 여부 확인"""
