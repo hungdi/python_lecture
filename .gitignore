@@ -1,6 +1,7 @@
 ex1/__pycache__/
 ex2/__pycache__/
 ex3/__pycache__/
+ex4/__pycache__/
 *.pyc
 *.pyo
 *.pyd
