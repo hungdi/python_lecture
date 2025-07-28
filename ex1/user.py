@@ -3,6 +3,7 @@ class User:
         self.name = name
         self.money = money
     
+    """유저의 잔액 관리, 음료수 구매 처리"""
     def buy(self, vm, drink):
         if self.money >= drink.price:
             self.money -= drink.price
