@@ -146,6 +146,7 @@ class Simulator:
     def simulate_day(self, user):
         user.hp -= user.job.daily_hp_loss
 
+        # 함수의 명세(이름과 매개변수)가 제각각이므로 문자열로 저장
         actions = [ 
             ("gather_food", 1),
             ("gather_antidote", 1),
@@ -155,8 +156,13 @@ class Simulator:
         ]
         
         for method_name, arg_count in actions:
-            method = getattr(user.job, method_name, None)
-            if callable(method):
+            method = getattr(user.job, method_name, None) # 함수의 이름가지고 함수 그 자체를 가져옴. 아래 코드와 유사함! 
+            # 괄호를 붙이면 함수의 실행이며, 괄호를 안붇이는 경우 함수 그 자체를 받아오는것 (함수를 매개변수로!)
+            #if method_name == "gather_food":
+            #    method = user.job.gather_food
+            #elif method_name == "fight":
+            #    method = user.job.fight
+            if callable(method): # 진짜 함수인지 확인하는 용도
                 if arg_count == 1:
                     method(user)
                 elif arg_count == 2:

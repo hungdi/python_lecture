@@ -7,4 +7,6 @@ class AutoAttrMeta(type):
 class MyModel(metaclass=AutoAttrMeta):
     pass
 
+model = MyModel()
 print(MyModel.created_by)
+print(type(model).created_by)
