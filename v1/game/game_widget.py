@@ -30,7 +30,7 @@ class GameWidget(QWidget):
             bullet = self.character.shoot()
             self.bullets.append(bullet)
         
-        print("Pressed:", event.key())  # ← 추가
+        #print("Pressed:", event.key())  # ← 추가
 
     def keyReleaseEvent(self, event):
         self.input.handle_key_release(event.key())

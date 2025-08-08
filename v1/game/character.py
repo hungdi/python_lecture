@@ -2,37 +2,43 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import QTimer
 from PyQt5.QtCore import Qt
 from game.bullet import Bullet
+from game.image_load_error import ImageLoadError
 import os
-from game.pixmap_manager import crop_transparent_area
+#from game.pixmap_manager import crop_transparent_area
 
 class Character:
     def __init__(self, image: QPixmap, ground_y: int):
-        self.image = image
-        self.x = 100
-        self.y = ground_y
-        self.ground_y = ground_y
+        #self.image = image
+        self.init_position(ground_y)
+        self.init_pixmap(image)
 
         self.is_jumping = False
         self.jump_velocity = 0
         self.gravity = 1.5
-        self.original_image = image
-        # 현재 파일 기준 절대경로 설정
-        #pixmap = QPixmap("assets/character_shoot.png")
-        #print("✅ isNull:", pixmap.isNull())  # True면 문제 있음
-        #target_size = self.original_image.size()
-        #preprocessed_image = crop_transparent_area(pixmap)
-        #self.shooting_image = preprocessed_image
-        self.shooting_image = QPixmap("assets/character_shoot.png")
-        if self.shooting_image.isNull():
-            print("❌ shooting 이미지 로드 실패")
-        else:
-            print("✅ shooting 이미지 로드 성공:", self.shooting_image.size())
-        self.image = self.original_image
         self.is_shooting = False
+
         self.shoot_timer = QTimer()
         self.shoot_timer.setSingleShot(True)
         self.shoot_timer.timeout.connect(self.end_shooting)
+    def init_position(self, ground_y):
+        self.x = 100
+        self.y = ground_y
+        self.ground_y = ground_y
+    
+    def init_pixmap(self, image):
+        self.original_image = image
+        self.shooting_image = QPixmap("assets/character_shoot.png")
+        try:
+            if self.shooting_image is None or self.shooting_image.isNull:
+                raise ImageLoadError
+            print("shooting image load success", self.shooting_image.size())
+        except ImageLoadError as e:
+            print(e.args)
+        except Exception as e:
+            print(e.args)
+        self.image = self.original_image
 
+    
     def start_jump(self):
         if not self.is_jumping:
             self.is_jumping = True
