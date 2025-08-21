@@ -36,8 +36,8 @@ class Mammoth:
 
     def init_status(self):
         self.speed = 1
-        self.hp = 100
-        self.max_hp = 200
+        self.hp = 10
+        self.max_hp = 10
         self.power = 20
         self.last_attack_time = 0
         self.attack_cd = 1

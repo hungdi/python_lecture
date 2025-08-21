@@ -2,11 +2,12 @@ import time
 from PyQt5.QtCore import Qt
 from .mammoth import Mammoth
 from .event_bus import EventBus
+from .event import MonsterKilledEvent
 
 class MammothManager:
-    def __init__(self, background, bus:EventBus):
+    def __init__(self, background, game_bus: EventBus):
         self.background = background
-        self.bus = bus
+        self.game_bus = game_bus
         self.max_count = 10
         self.cooldown = 3
         self.last_spawn_time = 0
@@ -18,7 +19,8 @@ class MammothManager:
         for m in self.mammoths:
             if m.is_dead and not m.death_emitted:
                 m.death_emitted = True
-                self.bus.emit('MONSTER_KILLED', {'monster_id':m.id, 'kind':m.kind, 'is_boss':m.is_boss})
+                #self.bus.emit('MONSTER_KILLED', {'monster_id':m.id, 'kind':m.kind, 'is_boss':m.is_boss})
+                self.game_bus.emit(MonsterKilledEvent(m.id, m.kind, m.is_boss))
 
     def spawn_mam(self):
         if self.spawn_normals == False:

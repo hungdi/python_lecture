@@ -10,6 +10,7 @@ from .mammoth import Mammoth
 from .mammoth_manager import MammothManager
 from .potion_manager import PotionManager
 from .event_bus import EventBus
+from .event import GameEvents, MonsterEvents, InventoryEvents, MonsterKilledEvent, BossSpawnedEvent, BossEndedEvent
 from .stats import KillCounter
 from .progression import Progression
 from .boss_rules import BossRules
@@ -20,16 +21,20 @@ class GameWidget(QWidget):
         self.setWindowTitle('Babarian Game')
         self.setFixedSize(1000,1000)
 
-        self.bus = EventBus()
-        self.background = Background(self.bus)
+        # self.bus = EventBus()
+        # generic을 사용한 버스 선언
+        self.monster_bus = EventBus[MonsterEvents]()
+        self.game_bus = EventBus[GameEvents]()
+        self.inventory_bus = EventBus[InventoryEvents]()
+        self.background = Background(self.game_bus)
         self.character = Character()
         self.controller = CharacterManager(self.character)
-        self.axe_controller = AxeManager(self.character, self.bus)
+        self.axe_controller = AxeManager(self.character, self.game_bus)
         self.mammoth = Mammoth(self.background)
-        self.mammoth_controller = MammothManager(self.background,self.bus)
-        self.kill_counter = KillCounter(self.bus)
-        self.progression = Progression(self.bus, self.character, self.axe_controller)
-        self.boss_rules = BossRules(self.bus, self.mammoth_controller)
+        self.mammoth_controller = MammothManager(self.background,self.monster_bus)
+        self.kill_counter = KillCounter(self.monster_bus)
+        self.progression = Progression(self.monster_bus, self.game_bus, self.character, self.axe_controller)
+        self.boss_rules = BossRules(self.game_bus, self.monster_bus, self.mammoth_controller)
         self.potion_controller = PotionManager(self.background)
         self.camera = Camera(self.width(), self.height(), self.background.width(), self.background.height())
 
@@ -37,9 +42,13 @@ class GameWidget(QWidget):
         self.timer.timeout.connect(self.game_loop)
         self.timer.start(16)
 
-        self.bus.on('MONSTER_KILLED', lambda d: print('[KILLED]', d))
-        self.bus.on('BOSS_SPAWNED',  lambda _: print('[BOSS] spawned'))
-        self.bus.on('BOSS_ENDED',    lambda _: print('[BOSS] ended'))
+        # 버스 형태 수정에 따라, 
+        #self.bus.on('MONSTER_KILLED', lambda d: print('[KILLED]', d))
+        #self.bus.on('BOSS_SPAWNED',  lambda _: print('[BOSS] spawned'))
+        #self.bus.on('BOSS_ENDED',    lambda _: print('[BOSS] ended'))
+        self.monster_bus.on(MonsterKilledEvent, lambda d: print(f"[KILLED] {d.monster_id}, {d.kind}, {d.is_boss}"))
+        self.game_bus.on(BossSpawnedEvent, lambda _: print('[BOSS] spawned'))
+        self.game_bus.on(BossEndedEvent, lambda _: print('[BOSS] ended'))
 
 
     def keyPressEvent(self, event):

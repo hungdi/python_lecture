@@ -1,17 +1,19 @@
 from PyQt5.QtGui import QPixmap
 from . import config
+from .event import ChangeMapEvent
 
 class Background:
-    def __init__(self, bus):
-        self.bus = bus
+    def __init__(self, game_bus):
+        self.game_bus = game_bus
         self.bg = QPixmap("assets/background.png")
         self.wall_width = 200
         self.origin_x = 0
         self.origin_y = 0
-        self.bus.on('CHANGE_MAP', self._change_background)
+        self.game_bus.on(ChangeMapEvent, self._change_background)
 
-    def _change_background(self, dict):
-        level = dict.get('level', 0)
+    def _change_background(self, changeMapEvent: ChangeMapEvent):
+        #level = dict.get('level', 0)
+        level = changeMapEvent.level
         if level > config.FIRST_CHANGE_MAP_LEVEL:
             self.bg = QPixmap("assets/background_lava.png")
     

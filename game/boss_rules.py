@@ -1,30 +1,34 @@
+from .event import BossEndedEvent, BossSpawnedEvent, MonsterKilledEvent
+
 class BossRules:
-    def __init__(self, bus, mammoth_manager):
-        self.bus = bus
+    def __init__(self, game_bus, monster_bus, mammoth_manager):
+        self.game_bus = game_bus
+        self.monster_bus = monster_bus
         self.mam = mammoth_manager
         self.total_kills_for_boss = 0
         self.boss_active = False
 
-        bus.on('MONSTER_KILLED', self.on_killed)
+        monster_bus.on(MonsterKilledEvent, self.on_killed)
 
     def start_boss_phase(self):
         self.boss_active = True
         self.mam.spawn_normals = False
         self.mam.despawn_normals()
         self.mam.spawn_boss()
-        self.bus.emit('BOSS_SPAWNED', {})
+        self.game_bus.emit(BossSpawnedEvent)
 
     def end_boss_phase(self):
         self.boss_active = False
         self.mam.spawn_normals = True
         self.total_kills_for_boss = 0
-        self.bus.emit('BOSS_ENDED', {})
+        self.game_bus.emit(BossEndedEvent)
 
-    def on_killed(self, data):
-        is_boss = data.get('is_boss', False)
+    def on_killed(self, monsterKilledEvent: MonsterKilledEvent):
+        is_boss = monsterKilledEvent.is_boss
 
         credit = 5 if is_boss else 1
-        self.bus.emit('KILL_CREDIT', {'amount': credit, 'source': 'boss' if is_boss else 'normal'})
+        # 사용되지 않는 emit구문
+        # self.bus.emit('KILL_CREDIT', {'amount': credit, 'source': 'boss' if is_boss else 'normal'})
 
         if not self.boss_active:
             if not is_boss:
