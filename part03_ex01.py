@@ -9,12 +9,14 @@ class LinkedList:
 
     def append(self, data):
         new_node = Node(data)
+        # head가 비어있는 경우 head에 새 노드를 지정
         if self.head is None:
             self.head = new_node
             return
         
+        # head부터 끝위치까지 찾음 (그 뒤에 추가해야하기 때문에)
         last = self.head
-        while(last.next):
+        while last.next:
             last = last.next
         last.next = new_node
     
