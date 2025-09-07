@@ -3,7 +3,7 @@ class DNode:
     def __init__(self, val):
         self.next = None
         self.prev = None
-        self.value = val
+        self.val = val
 
 class DoublyLinkedList:
     def __init__(self, values=None):
@@ -43,19 +43,48 @@ class DoublyLinkedList:
     def insert_after(self, node, val):
         # 주어진 파라미터 node 뒤에 데이터를 추가합니다.
         # prev, next모두 수정 필요
-        new_node = 1
+        nxt = node.next
+        new_node = DNode(val)
+        new_node.prev = node
+        new_node.next = nxt
+        node.next = new_node
+        if nxt:
+            nxt.prev = new_node
+        else:
+            self.tail = new_node
+        return new_node
+
+
         return new_node
 
     def insert_before(self, node, val):
         # 주어진 파라미터 node 앞에 데이터를 추가합니다.
         # prev, next모두 수정 필요
-        new_node = 1
+        prv = node.prev
+        new_node = DNode(val)
+        new_node.next = node
+        new_node.prev = prv
+        node.prev = new_node
+        if prv:
+            prv.next = new_node
+        else:
+            self.head = new_node
         return new_node
 
     def remove(self, node):
         # 주어진 노드를 삭제합니다. 
         # 앞/뒤의 노드 참조를 연결해주고, 현재 노드를 끊어줍니다.
-        pass
+        prv, nxt = node.prev, node.next
+        if prv:
+            prv.next = nxt
+        else:
+            self.head = nxt
+        if nxt:
+            nxt.prev = prv
+        else:
+            self.tail = prv
+        node.prev = None
+        node.next = None
 
     def __iter__(self):
         # 이 객체를 iterable로 인식하기 위한 매직메서드 오버라이딩입니다.
@@ -72,12 +101,23 @@ class DoublyLinkedList:
     def print_forward(self):
         # head부터 tail까지 순회합니다. 
         # 1 -> 3 -> 9 -> 11 과 같은 방식으로 출력합니다.
-        pass
+        node = self.head
+        values = []
+        while node:
+            values.append(str(node.val))
+            node = node.next
+        print(" -> ".join(values))
+
 
     def print_backward(self):
         # tail부터 head까지 순회합니다.
         # 11 -> 9 -> 3 -> 1 과 같은 방식으로 출력합니다.
-        pass
+        node = self.tail
+        values = []
+        while node:
+            values.append(str(node.val))
+            node = node.prev
+        print(" <- ".join(values))
 
 
 if __name__ == "__main__":

@@ -8,19 +8,22 @@ class LinkedList:
         self.head = None
 
     def append(self, data):
-        node = Node(data)
-        if not self.head:
-            self.head = node
+        new_node = Node(data)
+
+        # head가 없는 경우
+        if self.head is None:
+            self.head = new_node
             return
-        
+        # 마지막에 노드 추가
         current = self.head
-        while current.next:
+        while current.next is not None:
             current = current.next
 
-        current.next = node
-        
+        current.next = new_node
+
 
     def print_list(self):
+        
         current = self.head
         while current:
             print(current.data, end="->")
@@ -29,37 +32,34 @@ class LinkedList:
         print("None")
     
     def search(self, key):
-
         current = self.head
-        while current:
+
+        while current.next:
             if current.data == key:
-               return current
+                return current
             current = current.next
-        
         return None
-        
-    
-    def delete_node(self, key):
-        
-        current = self.head
-        # head를 삭제하는 경우
-        if not current and current.data == key:
-            current = current.next
-            self.head = None
-            return
+            
 
+    def delete_node(self, key):
+        current = self.head
+        if current is not None and current.data == key:
+            self.head = current.next
+            return
+        
+        # key 탐색
         prev = None
         while current is not None and current.data != key:
             prev = current
             current = current.next
 
+        # 다 순회할때까지 못찾음
         if current is None:
             return
         
+        # key를 찾음
         prev.next = current.next
         current = None
-
-    
 
 
 my_list = LinkedList()
@@ -80,3 +80,4 @@ else:
 # 요소 삭제
 my_list.delete_node(2)
 my_list.print_list() # 1 -> 3 -> None
+
